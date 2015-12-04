@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+  <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html body { font: 13px Helvetica, Arial; height: 100%;}
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+      
+    div.wrapper {
+    height:280px;
+    border-style:solid;
+    background: aqua;
+    overflow:auto;   
+}
+
+
+
+    </style>
+<link rel="stylesheet" type="text/css" href="css/my.css">
+    <link rel="stylesheet" href="css/normalize.css" rel="stylesheet">
+    
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <!-- 
+    <ul id="messages"></ul>
+    -->
+
+
+    <div class = "wrapper" id="dvTable" >
+
+    BEGIN one<br/>
+    one<br/>
+        two<br/>
+    three<br/>
+    four<br/>
+    five<br/>
+   oooooooooooooo<br/>
+    END one<br/>
+    <span id="messages"></span>
+    </div>
+    
+
+
+    
+    <script type="text/javascript">
+    
+    var height = 0;
+$('div p').each(function(i, value){
+    height += parseInt($(this).height());
+});
+
+height += '';
+//alert(height);
+$('dvTable').animate({scrollTop: height});
+
+    /**************
+function removeme____GenerateTable() {
+    //Build an array containing Customer records.
+    var customers = new Array();
+    customers.push(["Customer Id", "Name", "Country"]);
+    customers.push([1, "John Hammond", "United States"]);
+    customers.push([2, "Mudassar Khan", "India"]);
+    customers.push([3, "Suzanne Mathews", "France"]);
+    customers.push([4, "Robert Schidner", "Russia"]);
+    
+        customers.push([1, "John Hammond", "United States"]);
+    customers.push([2, "Mudassar Khan", "India"]);
+    customers.push([3, "Suzanne Mathews", "France"]);
+    customers.push([4, "Robert Schidner", "Russia"]);
+        customers.push([1, "John Hammond", "United States"]);
+    customers.push([2, "Mudassar Khan", "India"]);
+    customers.push([3, "Suzanne Mathews", "France"]);
+    customers.push([4, "Robert Schidner", "Russia"]);
+ 
+    //Create a HTML Table element.
+    var table = document.createElement("TABLE");
+    table.border = "1";
+ 
+    //Get the count of columns.
+    var columnCount = customers[0].length;
+ 
+    //Add the header row.
+    var row = table.insertRow(-1);
+    for (var i = 0; i < columnCount; i++) {
+        var headerCell = document.createElement("TH");
+        headerCell.innerHTML = customers[0][i];
+        row.appendChild(headerCell);
+    }
+ 
+    //Add the data rows.
+    for (var i = 1; i < customers.length; i++) {
+        row = table.insertRow(-1);
+        for (var j = 0; j < columnCount; j++) {
+            var cell = row.insertCell(-1);
+            cell.innerHTML = customers[i][j];
+        }
+    }
+ 
+    var dvTable = document.getElementById("dvTable");
+    dvTable.innerHTML = "";
+    dvTable.appendChild(table);
+}
+************/
+</script>
+
+
+    
+    <form action="">
+
+
+    
+     <div class="form-group form-group-lg">
+    <label class="col-sm-2 control-label" for="formGroupInputLarge">chit chatty</label>
+    <div class="col-sm-10">
+      <input class="form-control" type="text" id="m" autocomplete="off" placeholder="say something">
+    </div>
+  </div>
+   <div class="form-group">
+<button type="submit" class="btn btn-primary btn-lg btn-block">Send</button>
+    <div class="input-group">
+    </div>
+  </div>
+
+    <!-- <input id="m" autocomplete="off" /><button>Send</button> -->
+    </form>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+    //var textbox = $("#message22");
+    var msgData = "";
+    //textbox.val("");
+    //alert (textbox);
+    
+      var socket = io();
+      $('form').submit(function(){
+      
+      //alert('socket ' + socket);
+      
+        socket.emit('chat message', $('#m').val());
+        $('#m').val('');         
+        return false;
+      });
+      socket.on('chat message', function(msg){
+        $('#messages').append($('<li>').text(msg));
+        
+        //textbox.val( textbox.val() + ' ' + msg);
+        msgData += (msg + "\n");
+        console.log('msgData = [' + msgData + ']');
+        //customers.push([4, msg]);
+        //GenerateTable();
+        //alert($('dvTable').animate({scrollTop: 150}));
+        //$("body").clearQueue();
+        $('div').animate({scrollTop: 100150});
+        
+      });
+    </script>
+  </body>
+</html>
