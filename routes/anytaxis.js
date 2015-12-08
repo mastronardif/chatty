@@ -73,7 +73,7 @@ function anytaxis11(res, json)
             //Here "submitted.jade" is the view file for this landing page 
             //We pass the variable "email" from the url parameter in an object rendered by Jade
             //res.render('submitted', { email : 'req.params.mail' });
-            res.send('FM WWWWW ' + JSON.stringify(body) + 'EEEEE');
+        // fm 12/7/15 res.send('FM WWWWW ' + JSON.stringify(body) + 'EEEEE');
             console.log(body);
             //results = body;
             //setResults(body)
