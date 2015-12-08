@@ -1,0 +1,28 @@
+/* 
+* make a form like a letter.  First attempt.
+* 
+* 
+* 09/07/2013
+*/
+body.shipper {background-color:bisque;}
+
+  .body {
+    background: #FDFDFD; 
+    }
+
+    .form div.row {
+    margin-top: .25em;
+    }
+
+    .form span {
+    display: inline-block;
+    vertical-align: top;
+    }
+
+    .form span.label {
+    font-weight: bold;
+    margin-left: .25em;
+    text-align: left;
+    width: 10em;
+    color:chocolate;
+    }
