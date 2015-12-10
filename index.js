@@ -25,11 +25,14 @@ var bodyParser = require('body-parser');
 
 var anytaxis = require('./routes/anytaxis');
 
+/*
 function function2() {
     // all the stuff you want to happen after that pause
     console.log('Blah blah blah blah extra-blah');
 }
+*/
 
+myInitials = '';
 app.get('/chat/:id', function(req, res) {
     var id = req.params.id;
     var person = anytaxis.lookupID(id);
@@ -37,19 +40,35 @@ app.get('/chat/:id', function(req, res) {
     console.log('/chat/:id hello  ('+person.name + ')');
     
     // tell everyone to call in.
-    var results = anytaxis.tellEveryone(id);
+    // skip for testing var results = anytaxis.tellEveryone(id);
     
-    res.sendfile( __dirname + "/public/" + "indexChitChatty.html" );
+    //res.sendfile( __dirname + "/public/" + "indexChitChatty.html" );
+    myInitials = id; //person.name;
+    res.render('pages/indexChitChatty.ejs'); //"indexChitChatty.ejs" );
+    
+    setTimeout(function() {
+    console.log('Blah blah blah blah extra-blah');
+        
+    var msg = id + ': Hey hey hey lets start gabbing';
+  io.emit('chat message', msg);
+}, 3000);
 
+    myInitials = '';
 });
-    
+
 app.get('/chat', function (req, res) {
     console.log(' /chat ' + __dirname );
-    //res.sendfile(__dirname + '/indexChitChatty.html');
-   //res.sendfile( '/indexChitChatty.html' , {root:__dirname}); 
-    res.sendfile( __dirname + "/public/" + "indexChitChatty.html" );
+    
+    var id = req.params.fld_initials;
+    console.log('id =  ' + id );
+    //var person = anytaxis.lookupID(id);
+    
+ //res.sendfile( __dirname + "/public/" + "indexChitChatty.html" );
     // res.sendfile(__dirname,'/public/indexChitChatty.html');
     
+
+    res.render('pages/indexChitChatty.ejs'); //"indexChitChatty.ejs" );
+     
    // call the rest of the code and have it execute after 3 seconds
 //setTimeout(function2, 3000); 
 

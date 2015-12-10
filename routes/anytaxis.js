@@ -270,6 +270,13 @@ function _lookupID(id)
 {
     var retval = "root";
     
+    // default
+    var obj = {
+        name:  id,
+        sms:   "9088580954@vtext.com",
+        email: "mastronardif@gmail.com"
+            }
+    
     if (id.toUpperCase() === "GM".toUpperCase())
     {
         var obj = {
