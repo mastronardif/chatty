@@ -17,6 +17,7 @@ var domain = 'joeschedule.mailgun.org';
 // 'mastronardif@gmail.com';
 var Kris  = 'mastronardif@gmail.com';//"9084442745@vtext.com";
 var Frank = "9088580954@vtext.com"; //,mastronardif@gmail.com"; //,mastronardif@netcarrier.com";
+var gEveryone = "9088580954@vtext.com"; //,mastronardif@gmail.com"; //,mastronardif@netcarrier.com";
 var from_who = 'mastronardif@gmail.com';
 var       to = 'mastronardif@netcarrier.com';
 var sub = "you drank all my wine";
@@ -27,8 +28,57 @@ function setResults(str)
     results = str;
 }
 
+//tellEveryone
+function tellEveryone(id)
+{
+    //We pass the api_key and domain to the wrapper, or it won't be able to identify + send emails
+    var mailgun = new Mailgun({apiKey: api_key, domain: domain});
 
+    var sub  = 'FM lets chat';
+    //var loc  = (obj.loc     === undefined) ? ""       : "I am at: " + obj.loc.address;
+    var body = 'please go to https://radiant-headland-2985.herokuapp.com/ ';
 
+    var from = Frank;
+    var to   = gEveryone;
+    
+
+    var data = {
+    //Specify email data
+      from: from,
+    //The email to contact
+      to: Frank,
+    //Subject and text data  
+      subject: sub,
+      text: body
+      //html: 'Hello, This is not a plain-text email, I wanted to test some spicy Mailgun sauce in NodeJS! <a href="http://0.0.0.0:3030/validate?' + 
+      //'">Click here to add your email address to a mailing list</a>'
+    }
+
+    //Invokes the method to send emails given the above data with the helper library
+    mailgun.messages().send(data, function (err, body) {
+        //If there is an error, render the error page
+        if (err) {
+            //res.render('error', { error : err});
+            console.log("got an error: ", err);
+            results = err;
+        }
+        //Else we can greet    and leave
+        else {
+            //Here "submitted.jade" is the view file for this landing page 
+            //We pass the variable "email" from the url parameter in an object rendered by Jade
+            //res.render('submitted', { email : 'req.params.mail' });
+        // fm 12/7/15 res.send('FM WWWWW ' + JSON.stringify(body) + 'EEEEE');
+            console.log(body);
+            //results = body;
+            //setResults(body)
+        }
+    });
+
+    return results;
+    
+}
+
+// FM 12/9/15 using this one!!!!
 function anytaxis11(res, json)
 {
     //We pass the api_key and domain to the wrapper, or it won't be able to identify + send emails
@@ -260,6 +310,13 @@ module.exports = {
     // whatever
     console.log('for foo11'); 
     var results = anytaxis11 (res, data);
+    console.log(results);
+    return results;
+  },
+  tellEveryone: function (id) {
+    // whatever
+    console.log('anytaxis.js tellEveryone ' + id); 
+    var results = tellEveryone (id);
     console.log(results);
     return results;
   },

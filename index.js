@@ -23,17 +23,21 @@ var bodyParser = require('body-parser');
     // parse multipart/form-data
     //app.use(multer());
 
-
-
-
-
-
-
-
-
-
 var anytaxis = require('./routes/anytaxis');
 
+app.get('/chat/:id', function(req, res) {
+    var id = req.params.id;
+    var person = anytaxis.lookupID(id);
+
+    console.log('/chat/:id hello  ('+person.name + ')');
+    
+    // tell everyone to call in.
+    var results = anytaxis.tellEveryone(id);
+    
+    res.sendfile( __dirname + "/public/" + "indexChitChatty.html" );
+  
+});
+    
 app.get('/chat', function (req, res) {
     console.log('xxxxxxxxxxxxxxx /chat ' + __dirname );
     //res.sendfile(__dirname + '/indexChitChatty.html');
