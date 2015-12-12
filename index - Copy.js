@@ -24,12 +24,6 @@ var bodyParser = require('body-parser');
     // parse multipart/form-data
     //app.use(multer());
 
-// usernames which are currently connected to the chat
-var usernames = {};
-
-// rooms which are currently available in chat
-var rooms = ['room1','room2','room3'];
-
 var anytaxis = require('./routes/anytaxis');
 
 /*
@@ -58,7 +52,7 @@ app.get('/chat/:id/:grp', function(req, res) {
         myGroup = req.params.grp;
     }
     
-     console.log('/chat/:id/:grp hello22  ('+person.name +', '+ myGroup + ')');
+     console.log('/chat/:id/:grp hello  ('+person.name +', '+ myGroup + ')');
     
     //myGroup = req.params.group || 'wtf';
 
@@ -67,14 +61,14 @@ app.get('/chat/:id/:grp', function(req, res) {
     
     //res.sendfile( __dirname + "/public/" + "indexChitChatty.html" );
     myInitials = id; //person.name;
-    res.render('pages/indexChitChatty22.ejs'); //"indexChitChatty.ejs" );
-  /***  
+    res.render('pages/indexChitChatty.ejs'); //"indexChitChatty.ejs" );
+    
     setTimeout(function() {
         console.log('Blah blah blah blah extra-blah');
         var msg = id + ': Hey hey hey lets start gabbing';
             io.emit('chat message', msg);
     }, 3000);
-*******/
+
     myInitials = '';
     myGroup = '';
 });
@@ -83,7 +77,7 @@ app.get('/chat/:id', function(req, res) {
     var id = req.params.id;
     var person = anytaxis.lookupID(id);
 
-    console.log('/chat/:id hello22  ('+person.name + ')');
+    console.log('/chat/:id hello  ('+person.name + ')');
     
     // tell everyone to call in.
     // skip for testing var results = anytaxis.tellEveryone(id);
@@ -91,15 +85,14 @@ app.get('/chat/:id', function(req, res) {
     //res.sendfile( __dirname + "/public/" + "indexChitChatty.html" );
     myInitials = id; //person.name;
     res.render('pages/indexChitChatty.ejs'); //"indexChitChatty.ejs" );
-
-    /*******/
+    
     setTimeout(function() {
     console.log('Blah blah blah blah extra-blah');
         
     var msg = id + ': Hey hey hey lets start gabbing';
   io.emit('chat message', msg);
 }, 3000);
-/***********/
+
     myInitials = '';
 });
 
@@ -127,16 +120,6 @@ setTimeout(function() {
 }, 3000);   
 });
 
-
-app.get('/index22', function (req, res) {
-    console.log('xxxxxxxxxxxxxxx /anytaxi ' + __dirname ); 
-//    response.render('pages/checkinGM');
-
-    //res.sendfile(__dirname + '/indexChitChatty.html');
-   //res.sendfile( '/indexChitChatty.html' , {root:__dirname}); 
-res.sendfile( __dirname + "/public/" + "index22.html" );
-    // res.sendfile(__dirname,'/public/indexChitChatty.html');
-});
 
 app.get('/anytaxi', function (req, response) {
     console.log('xxxxxxxxxxxxxxx /anytaxi ' + __dirname ); 
@@ -193,70 +176,14 @@ var server = http.createServer(app).listen(app.get('port'), app.get('ipaddress')
   console.log("Express server listening on port " + app.get('port'));
 });
 
-io = io.listen(server);
 
-// using rooms begin
-/***********/
-io.sockets.on('connection', function (socket) {
-	
-	// when the client emits 'adduser', this listens and executes
-	socket.on('adduser', function(username){
-		// store the username in the socket session for this client
-		socket.username = username;
-		// store the room name in the socket session for this client
-		socket.room = 'room1';
-		// add the client's username to the global list
-		usernames[username] = username;
-		// send client to room 1
-		socket.join('room1');
-		// echo to client they've connected
-		socket.emit('updatechat', 'SERVER', 'you have connected to room1');
-		// echo to room 1 that a person has connected to their room
-		socket.broadcast.to('room1').emit('updatechat', 'SERVER', username + ' has connected to this room');
-		socket.emit('updaterooms', rooms, 'room1');
-	});
-	
-	// when the client emits 'sendchat', this listens and executes
-	socket.on('sendchat', function (data) {
-		// we tell the client to execute 'updatechat' with 2 parameters
-		io.sockets.in(socket.room).emit('updatechat', socket.username, data);
-	});
-	
-	socket.on('switchRoom', function(newroom){
-		socket.leave(socket.room);
-		socket.join(newroom);
-		socket.emit('updatechat', 'SERVER', 'you have connected to '+ newroom);
-		// sent message to OLD room
-		socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username+' has left this room');
-		// update socket session room title
-		socket.room = newroom;
-		socket.broadcast.to(newroom).emit('updatechat', 'SERVER', socket.username+' has joined this room');
-		socket.emit('updaterooms', rooms, newroom);
-	});
-	
-
-	// when the user disconnects.. perform this
-	socket.on('disconnect', function(){
-        console.log(' ***************** disconnect');
-		// remove the username from global usernames list
-		delete usernames[socket.username];
-		// update list of users in chat, client-side
-		io.sockets.emit('updateusers', usernames);
-		// echo globally that this client has left
-		socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
-		socket.leave(socket.room);
-	});
-});
-/***********/
-
-// using rooms end
-
-/*****************
-// old way one room
+/*****************/
 io.on('connection', function(socket){
   socket.on('chat message', function(msg){
       console.log(msg); 
     io.emit('chat message', msg);
   });
 });
-***************/
+
+/***************/
+io = io.listen(server);

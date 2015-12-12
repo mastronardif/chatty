@@ -5,10 +5,15 @@
   <% include ../partials/header.ejs %>
   
 <script>
-function callChatWithInitials()
+function callChatWithInitials(room)
 {
     var inh = $('#fld_initials').val();
-    var url = './chat/' + inh;
+    //if (inh === '')
+    if (inh.length == 0)
+    { 
+        inh = 'Anonymous'; 
+    }
+    var url = './chat/' + inh + '/' + room;
     //alert(url);
     window.open(url, "_self");
 }    
@@ -29,29 +34,35 @@ function callChatWithInitials()
   <table class="table">
     <thead>
       <tr>
-        <th>Text</th>
+        <th>Chat Room</th>
         <th>Chat</th>
         <th>Invites</th>
       </tr>
     </thead>
     <tbody>
       <tr class="success">
-        <td><div class="col-xs-4"> <a href="./chat" class="lang-logo"> Scream Queens  </a> </div>
+        <td><div class="col-xs-4"> <a href="javascript:callChatWithInitials('Scream Queens')" class="lang-logo"> Scream Queens  </a> </div>
         </td>
         <td><a type="button" class="btn btn-lg btn-default" href="tel:641-715-3580,812789#">tel</td>
         <td>Julia, Lea, Dad, mom, Al, billy</td>
       </tr>
       <tr class="danger">
-        <td> <a href="./chat/GM" class="lang-logo"> CNN </a>
+        <td> <a href="javascript:callChatWithInitials('cnn');" class="lang-logo"> CNN </a>
         </td>
         <td><a type="button" class="btn btn-lg btn-default" href="tel:641-715-3580,812789#">tel</td>
         <td>Everyone</td>
       </tr>
       <tr class="info">
       
-        <td> <a href="javascript:callChatWithInitials();" class="lang-logo"> TWD </a>
+        <td> <a href="javascript:callChatWithInitials('room2');" class="lang-logo"> Room 2 </a>
         <td><a type="button" class="btn btn-lg btn-default" href="tel:641-715-3580,812789#">tel</td>
         <td>Ty, Mom, Dad, bobo</td>
+      </tr>
+      <tr class="danger">
+        <td> <a href="javascript:callChatWithInitials('room3');" class="lang-logo"> Room3 </a>
+        </td>
+        <td><a type="button" class="btn btn-lg btn-default" href="tel:641-715-3580,812789#">tel</td>
+        <td>Everyone</td>
       </tr>
     </tbody>
   </table>
@@ -113,12 +124,12 @@ function callChatWithInitials()
     
   <div class="row">
     <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-info-sign"></span> How this app works</h3>
+      <h3><span class="glyphicon glyphicon-info-sign"></span>Test</h3>
       <ul>
         <li>Enter Initials: <input type="text" id="fld_initials" name="fld_initials" maxlength="3" size="4">
         <a href="https://github.com/heroku/node-js-getting-started">!</a> .
         </li>
-
+        <li> <a href="./index22" class="lang-logo"> index22(rooms) </a></li>
         <li>chat with ____.</li>
         <li>be a taxi.</li>
         <li> <a href="https://addons.heroku.com/">call home</a>.</li>

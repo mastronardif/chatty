@@ -2,7 +2,7 @@
 <html>
   <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Socket.IO chat</title>
+    <title>Socket.IO chat room </title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html body { font: 13px Helvetica, Arial; height: 100%;}
@@ -16,7 +16,7 @@
     div.wrapper {
     height:280px;
     border-style:solid;
-    background: aqua;
+    background: #D1D0CE;
     overflow:auto;   
 }
     </style>
@@ -49,18 +49,6 @@
 
 
     <div class = "wrapper" id="dvTable" >
-<!--
-    BEGIN one<br/>
-    one<br/>
-        two<br/>
-    three<br/>
-    four<br/>
-    five<br/>
-   oooooooooooooo<br/>
-    END one<br/>
-    
-
-   -->
     <span id="messages"></span>
     </div>
         <span> <%= myInitials %> chatting in room <%= myGroup %></span>
@@ -108,34 +96,66 @@ $('dvTable').animate({scrollTop: height});
     //alert('<%= myInitials %>');
     
     var initial = '<%= myInitials %>'; // || 'chat message';
-    initial = initial + ': ';
+    var room = '<%= myGroup %>';
+    //initial = initial + ': ';
     //textbox.val("");
     //alert (textbox);
     
     //var ggg =  'chat message'; //'<%= myGroup %>' || 'chat message';
     //alert(ggg);
-      var socket = io();
+      //var socket = io();
+      	var socket = io.connect(); //('http://localhost:8080');
+
+	// on connection to server, ask for user's name with an anonymous callback
+	socket.on('connect', function(){
+		// call the server-side function 'adduser' and send one parameter (value of prompt)
+		socket.emit('adduser', initial); //prompt("What's your name?"));
+       // /*
+       setTimeout(function(){
+            socket.emit('switchRoom', room);
+            //alert(room);
+            console.log("THIS IS");
+        }, 1000);
+        // */   
+	
+	});
+      
       $('form').submit(function(){
-      var mmm = initial + $('#m').val();
-      //alert('socket ' + socket);
-        //socket.emit('chat message', $('#m').val());
-        socket.emit('chat message', mmm);
+      //var mmm = initial + $('#m').val();
+      var mmm = $('#m').val();
+      
+        //socket.emit('chat message', mmm);
+        // tell server to execute 'sendchat' and send along one parameter
+        socket.emit('sendchat', mmm);
+            
         $('#m').val('');         
         return false;
       });
+      
+    // listener, whenever the server emits 'updatechat', this updates the chat body
+	socket.on('updatechat', function (username, data) {
+		//$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+        var msg = '<b>'+username + ':</b> ' + data + '<br>';
+        //$('#messages').append($('<li>').text(msg));
+        $('#messages').append($('<li>').html(msg));
+        
+        //textbox.val( textbox.val() + ' ' + msg);
+        msgData += (msg + "\n");
+        console.log('msgData = [' + msgData + ']');
+        $('div').animate({scrollTop: 100150});        
+	});
+    
+/*********    
       socket.on('chat message', function(msg){
         $('#messages').append($('<li>').text(msg));
         
         //textbox.val( textbox.val() + ' ' + msg);
         msgData += (msg + "\n");
         console.log('msgData = [' + msgData + ']');
-        //customers.push([4, msg]);
-        //GenerateTable();
-        //alert($('dvTable').animate({scrollTop: 150}));
-        //$("body").clearQueue();
-        $('div').animate({scrollTop: 100150});
-        
+        $('div').animate({scrollTop: 100150});        
       });
+      **********/
+      
     </script>
   </body>
 </html>
