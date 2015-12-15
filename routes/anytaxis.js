@@ -1,4 +1,6 @@
 // Load the twilio module
+var util = require('util');
+//var async = require("async");
 
   var  url  = "http://joeschedule.com/cgi-bin/each.pl";
 // using needle begin
@@ -18,6 +20,7 @@ var domain = 'joeschedule.mailgun.org';
 var Kris  = 'mastronardif@gmail.com';//"9084442745@vtext.com";
 var Frank = "9088580954@vtext.com"; //,mastronardif@gmail.com"; //,mastronardif@netcarrier.com";
 var gEveryone = "9088580954@vtext.com"; //,mastronardif@gmail.com"; //,mastronardif@netcarrier.com";
+var gWhoAteTheWings = "9088580954@vtext.com";
 var from_who = 'mastronardif@gmail.com';
 var       to = 'mastronardif@netcarrier.com';
 var sub = "you drank all my wine";
@@ -28,9 +31,112 @@ function setResults(str)
     results = str;
 }
 
-//tellEveryone
+//tellEveryone(s)
+var everyone = [
+    {"name":"FM",  "sms": "9088580954@vtext.com"}, 
+    {"name":"KBM", "sms": "9084442745@vtext.com"}, 
+    {"name":"GM",  "sms": "9086443974@messaging.sprintpcs.com"}
+];
+
+//r obj = JSON.parse(text);
+/*******
+var iIndex = 0;
+var intervalID;
+var dataTot = []; 
+function myCallback() {
+
+  if (dataTot.length == 0) {
+      clearTimeout(intervalID)
+  }
+  else
+  {       
+    console.log('// Your code here ' + dataTot.pop().to + " \t" + iIndex++);
+  }
+}
+********/
+
+function mailgunSend(data)
+{
+    //console.log(" \n ^^^^ mailgunSend " + " "  + JSON.stringify( data ) ); 
+    //return;
+
+     //We pass the api_key and domain to the wrapper, or it won't be able to identify + send emails
+    var mailgun = new Mailgun({apiKey: api_key, domain: domain});            
+    //Invokes the method to send emails given the above data with the helper library
+    mailgun.messages().send(data, function (err, body) {
+        //If there is an error, render the error page
+        if (err) {
+            //res.render('error', { error : err});
+            console.log("got an error: ", err);
+            results = err;
+        }
+        else {
+        // fm 12/7/15 res.send('FM WWWWW ' + JSON.stringify(body) + 'EEEEE');
+            console.log(body);
+            results = body;
+            //setResults(body)
+        }
+    });    
+} 
+
+function tellEveryone22(obj)
+{
+    var id   = obj['id'];
+    var path = obj['path'];
+    var results = "";
+
+    console.log("***************** path("+path + ")");
+    
+    // for each user
+    var RoomFor = util.format(path, 'FM', 'WhoAteTheChicken');
+    //console.log("***************** RoomFor("+RoomFor + ")");
+    
+    for(var i = 0; i < everyone.length; i++) {
+        RoomFor = util.format(path, everyone[i].name, 'WhoAteTheChicken');
+        
+        console.log(everyone[i].sms);
+        var user = everyone[i].sms;
+        console.log(RoomFor);        
+        console.log("__________________________");
+
+    //We pass the api_key and domain to the wrapper, or it won't be able to identify + send emails
+    var mailgun = new Mailgun({apiKey: api_key, domain: domain});
+
+    var sub  = RoomFor ; //'http://192.168.1.9:5000/chat/Anonymous/room3';
+    var body = 'please go here " ' + RoomFor; //radiant-headland-2985.herokuapp.com/ ';
+    var from = Frank;
+    var to   = user; //gEveryone;
+    results += to + ", ";
+        
+    var data = {
+    //Specify email data
+      from: from,
+    //The email to contact
+      to: user,
+    //Subject and text data  
+      subject: sub,
+      text: body
+      //html: 'Hello, This is not a plain-text email, I wanted to test some spicy Mailgun sauce in NodeJS! <a href="http://0.0.0.0:3030/validate?' + 
+      //'">Click here to add your email address to a mailing list</a>'
+    }
+ 
+    setTimeout(function(x,y) { return function() { 
+            //console.log(" ^^^^ " + y ); 
+            //console.log(" ^^^^ fuck " + x + " "  + everyone[x].sms );
+            //console.log(" \n^^^^ fuck " + x + " "  + JSON.stringify( y ) ); 
+            mailgunSend(y);};             
+            }(i, data), 1000*i);
+    }
+  
+    return {"bobo": results};
+}
+
 function tellEveryone(id)
 {
+    return tellEveryone22(id);
+    
+    if ('WhoAteTheWings' == id) { return tellEveryone22(id); }
+    
     //We pass the api_key and domain to the wrapper, or it won't be able to identify + send emails
     var mailgun = new Mailgun({apiKey: api_key, domain: domain});
 
@@ -39,8 +145,7 @@ function tellEveryone(id)
     var body = 'please go to https://radiant-headland-2985.herokuapp.com/ ';
 
     var from = Frank;
-    var to   = gEveryone;
-    
+    var to   = gWhoAteTheWings;// gEveryone;
 
     var data = {
     //Specify email data

@@ -3,6 +3,9 @@ var app = express();
 var routes = require('./routes');
 var io = require('socket.io')(http);
 var http = require('http');
+//var url  = require('url');
+//var util = require('util');
+
 app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
@@ -102,6 +105,44 @@ app.get('/chat/:id', function(req, res) {
 /***********/
     myInitials = '';
 });
+
+app.get('/telleveryone/chat/:id', function(req, res) {
+    var id = req.params.id;
+    var person = anytaxis.lookupID(id);
+
+    console.log('/telleveryone/chat/:id hello22  ('+person.name + ')');
+    
+ //   var url_parts = url.parse(req.url);
+ //console.log(url_parts);
+ //console.log(url_parts.pathname);
+ 
+ var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+  console.log(fullUrl);
+// "http://192.168.1.9:5000/{ROOM}/{ID}"
+   //var results = {"up": "yours"};
+   
+  
+   
+   var root = req.protocol + '://' + req.get('host');
+   var path = "/chat/%s/%s"; //"/chat/$USER/$ROOM";
+   //console.log("root("+root + ")");
+   var urlRoom = root + path;
+   console.log("urlRoom("+urlRoom + ")");
+   //var urlRoom = util.format('https://www.youtube.com/watch?v=%s', info.video_id);
+
+  
+ var argsRoom = {"path": urlRoom,
+                 "id":  id
+                };
+               
+  var results = anytaxis.tellEveryone(argsRoom);
+  res.send(JSON.stringify(results));
+  //var results = anytaxis.tellEveryone('WhoAteTheWings');
+  
+    //res.send(JSON.stringify(req.body));
+    console.log(results);
+});
+
 
 app.get('/chat', function (req, res) {
     console.log(' /chat ' + __dirname );
