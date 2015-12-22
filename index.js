@@ -14,6 +14,7 @@ app.use(express.static(__dirname + '/public'));
 // views is directory for all template files
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
+app.set('js', __dirname + '/javascript');
 
 //app.use(express.bodyParser());
 var bodyParser = require('body-parser');
@@ -70,7 +71,16 @@ app.get('/chat/:id/:grp', function(req, res) {
     
     //res.sendfile( __dirname + "/public/" + "indexChitChatty.html" );
     myInitials = id; //person.name;
-    res.render('pages/indexChitChatty22.ejs'); //"indexChitChatty.ejs" );
+    //console.log(res);
+    if (myGroup == 'room33')
+    {
+        res.render('pages/indexChitChatty33.ejs'); //"indexChitChatty.ejs" );
+    }
+    else    // default
+    {
+        res.render('pages/indexChitChatty22.ejs'); //"indexChitChatty.ejs" );
+    }
+     
   /***  
     setTimeout(function() {
         console.log('Blah blah blah blah extra-blah');

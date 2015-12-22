@@ -16,21 +16,23 @@
     div.wrapper {
     height:280px;
     border-style:solid;
-    background: #D1D0CE;
+    background: #3FD1AE;
     overflow:auto;   
 }
     </style>
-<link rel="stylesheet" type="text/css" href="css/my.css">
-    <link rel="stylesheet" href="css/normalize.css" rel="stylesheet">
-    
+   
     <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-  <link href="css/bootstrap.min.css" rel="stylesheet">
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
-    
+
+ <script type="text/javascript" src="/javascripts/mycommands.js"></script>
+ <script type="text/javascript" src="/javascripts/myanytaxis.js"></script>
+ <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+ <script type="text/javascript" src="/javascripts/geo.js"></script> 
+ 
         
 <script type="text/javascript">
 /*
@@ -38,21 +40,88 @@
          alert('<%= myInitials %>');
      });
 */
+//var myobj = new mycommander();  
+//alert ( 'myobj = '+ myobj)  ;
+//myobj.my_test();
+//alert(mycommander);
+//mycommander.
+//mycmd.my_test();    // alerts: 1
 </script>
     
+<script>
+// location stuff begin
+ geocoder = new google.maps.Geocoder();
+ 
+    function codeLatLng(lat, lng)
+    {
+        //alert('lat = ' + lat);
+        var info = "";
+        var latlng = new google.maps.LatLng(lat, lng);
+        geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                console.log(results)
+                if (results[1]) {
+                    sendMsg(results[0].formatted_address);
+                    
+                    //find country name
+                    for (var i = 0; i < results[0].address_components.length; i++) {
+                        for (var b = 0; b < results[0].address_components[i].types.length; b++) {
+
+                            //there are different types that might hold a city admin_area_lvl_1 usually does in come cases looking for sublocality type will be more appropriate
+                            if (results[0].address_components[i].types[b] == "administrative_area_level_1") {
+                                //this is the object you are looking for
+                                city = results[0].address_components[i];
+                                break;
+                            }
+                        }
+                    }
+                    //city data
+                    //alert(city.short_name + " " + city.long_name)
+                } else {
+                    alert("No results found");
+                }
+            } else {
+                alert("Geocoder failed due to: " + status);
+            }
+        });
+
+        return info;
+    }
+
     
+    function getLocation() {
+       
+        if (navigator.geolocation) {
+               //alert(navigator.geolocation)
+            navigator.geolocation.getCurrentPosition(SetPosition, showError);
+        }
+        else { alert("Geolocation is not supported by this browser."); }
+    }
+
+    function SetPosition(position)
+    {
+        $('#lat').val(position.coords.latitude);
+        $('#lon').val(position.coords.longitude);
+       
+        //TestShit();
+        var info = codeLatLng(position.coords.latitude, position.coords.longitude);
+    }   
+// location stuff end
+</script>    
+
   </head>
   <body>
-    <!-- 
-    <ul id="messages"></ul>
-    -->
 
+    <!--the hidden shits begin -->
+    <input id="lat" type="hidden" name="x_lat" value="" />
+    <input id="lon" type="hidden" name="x_lon" value="" />
+    <!--the hidden shits end -->
 
     <div class = "wrapper" id="dvTable" >
     <span id="messages"></span>
     </div>
-        <span> <%= myInitials %> chatting in room <%= myGroup %></span>
-    
+    <span> <%= myInitials %> chatting in room <%= myGroup %></span>
+  
     <script type="text/javascript">
     
     var height = 0;
@@ -65,12 +134,9 @@ height += '';
 $('dvTable').animate({scrollTop: height});
 
 </script>
-
+ <form action="">
 
     
-    <form action="">
-
-
     
      <div class="form-group form-group-lg">
      <!--
@@ -90,6 +156,8 @@ $('dvTable').animate({scrollTop: height});
     </form>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    
+
     <script>
     //var textbox = $("#message22");
     var msgData = "";
@@ -97,14 +165,7 @@ $('dvTable').animate({scrollTop: height});
     
     var initial = '<%= myInitials %>'; // || 'chat message';
     var room = '<%= myGroup %>';
-    //initial = initial + ': ';
-    //textbox.val("");
-    //alert (textbox);
-    
-    //var ggg =  'chat message'; //'<%= myGroup %>' || 'chat message';
-    //alert(ggg);
-      //var socket = io();
-      	var socket = io.connect(); //('http://localhost:8080');
+   	var socket = io.connect(); //('http://localhost:8080');
 
 	// on connection to server, ask for user's name with an anonymous callback
 	socket.on('connect', function(){
@@ -142,7 +203,26 @@ $('dvTable').animate({scrollTop: height});
         //textbox.val( textbox.val() + ' ' + msg);
         msgData += (msg + "\n");
         console.log('msgData = [' + msgData + ']');
-        $('div').animate({scrollTop: 100150});        
+        $('div').animate({scrollTop: 100150});       
+
+//
+var iWt = 0;
+if (data.indexOf("**") > -1)
+{
+    iWt++;
+}
+if (data.indexOf("cmd") > -1)
+{
+    iWt++;
+}
+if (iWt > 1)
+{
+    mycmd.my_test();
+    // get location
+    getLocation();
+}
+//
+      
 	});
     
 /*********    
@@ -157,5 +237,13 @@ $('dvTable').animate({scrollTop: height});
       **********/
       
     </script>
+    <script>
+    function sendMsg(data)
+    {
+        socket.emit('sendchat', data);
+    }
+    
+    </script>  
+
   </body>
 </html>

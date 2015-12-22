@@ -15,7 +15,7 @@ function callChatWithInitials(room)
     { 
         inh = 'Anonymous'; 
     }
-    var url = './chat/' + inh + '/' + room;
+    var url = '/chat/' + inh + '/' + room;
     //alert(url);
     window.open(url, "_self");
 }    
@@ -136,6 +136,7 @@ function callChatWithInitials(room)
         <li>be a taxi.</li>
         <li> <a href="https://addons.heroku.com/">call home</a>.</li>
         <li>pick me up <a href="./anytaxis">here</a>!</li>
+        <li>* <a href="javascript:callChatWithInitials('room33');" class="lang-logo"> *Rooom33 </a></a></li>
       </ul>
     </div>
     <!--
