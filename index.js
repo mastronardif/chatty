@@ -72,7 +72,7 @@ app.get('/chat/:id/:grp', function(req, res) {
     //res.sendfile( __dirname + "/public/" + "indexChitChatty.html" );
     myInitials = id; //person.name;
     //console.log(res);
-    if (myGroup == 'room33')
+    if (myGroup == 'Commando')
     {
         res.render('pages/indexChitChatty33.ejs'); //"indexChitChatty.ejs" );
     }
