@@ -1,37 +1,38 @@
 <!doctype html>
 <html>
-<head>
-<link rel="shortcut icon" href="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTjy-obfwQrfYjlNjgmE7Acx4LiFLZfueOYDePAcMOgus8lo7jJ" />
-<link rel="apple-touch-icon" href="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTjy-obfwQrfYjlNjgmE7Acx4LiFLZfueOYDePAcMOgus8lo7jJ" />
-
+  <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>rm: <%= myGroup %></title>
+    <title>Socket.IO chat room </title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html body { font: 13px Helvetica, Arial; height: 100%;}
       form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0px; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 90%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
       
     div.wrapper {
-    height:300px;
+    height:280px;
     border-style:solid;
-    background: #3FD1AC;
+    background: #3FD1AE;
     overflow:auto;   
-    }
+}
     </style>
-   
+<link rel="stylesheet" type="text/css" href="css/my.css">
+    <link rel="stylesheet" href="css/normalize.css" rel="stylesheet">
+    
     <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-
+ 
+  <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
 
  <script type="text/javascript" src="/javascripts/mycommands.js"></script>
+
  <script type="text/javascript" src="/javascripts/myanytaxis.js"></script>
  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
  <script type="text/javascript" src="/javascripts/geo.js"></script> 
@@ -64,8 +65,18 @@
             if (status == google.maps.GeocoderStatus.OK) {
                 console.log(results)
                 if (results[1]) {
-                    sendMsg(results[0].formatted_address);
+                    //formatted address
                     
+                    //alert('aaaaaaaaa');
+                    //
+                    //send the shit to chatty
+                    //socket.emit('sendchat', results[0].formatted_address);
+                    sendShit(results[0].formatted_address);
+                    
+                    
+                    //info = results[0].formatted_address + "df";
+                    document.forms[0].elements.x_gisaddress.value = results[0].formatted_address;
+
                     //find country name
                     for (var i = 0; i < results[0].address_components.length; i++) {
                         for (var b = 0; b < results[0].address_components[i].types.length; b++) {
@@ -80,6 +91,8 @@
                     }
                     //city data
                     //alert(city.short_name + " " + city.long_name)
+
+
                 } else {
                     alert("No results found");
                 }
@@ -90,36 +103,108 @@
 
         return info;
     }
+
     
-    function getLocation() {     
+    function getLocation() {
+        //var to = document.getElementById('add-event-butto').innerHTML + '*';
+
+        //document.getElementById('add-event-butto').innerHTML = to;
+        
         if (navigator.geolocation) {
                //alert(navigator.geolocation)
-            navigator.geolocation.getCurrentPosition(SetPosition, showError);
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
         }
         else { alert("Geolocation is not supported by this browser."); }
     }
 
-    function SetPosition(position)
+function showPosition(position) {
+        //var to = document.getElementById('add-event-butto').innerHTML + '2*';
+        //alert(to)
+        //document.getElementById('add-event-butto').innerHTML = to;
+
+        //var latlon = position.coords.latitude + "," + position.coords.longitude;
+
+        //        document.forms[0].elements.lat.value = position.coords.latitude;
+         //alert(position.coords.longitude);
+        SetHiddenShits(position);
+        //alert(position);
+
+        //document.forms[0].elements.lon.value = position.coords.longitude;
+/*
+        var img_url = "http://maps.googleapis.com/maps/api/staticmap?center="
+        + latlon + "&zoom=14&size=400x300&sensor=false";
+        document.getElementById("mapholder").innerHTML = "<img src='" + img_url + "'>";
+*/
+
+    }
+
+    function SetHiddenShits(position)
     {
+        //document.forms[0].elements.lon.value = "clear the shit";
+        //alert('test shit');
+        //alert(document.forms[0].elements.length);
+        //alert(document.forms[0].elements.x_lat.value);
+      //alert($('#lat'));
+      //alert(position.coords.latitude);
         $('#lat').val(position.coords.latitude);
         $('#lon').val(position.coords.longitude);
-       
-        //TestShit();
-        var info = codeLatLng(position.coords.latitude, position.coords.longitude);
-    }   
+        
+        //document.forms[0].elements.x_lat.value = position.coords.latitude;
+        //document.forms[0].elements.x_lon.value = position.coords.longitude;
+
+        //console.log(position);
+        //var jsonstr = JSON.stringify(position)
+      //var fuck = myFlatten(position);
+
+      //var jsonstr = JSON.stringify(fuck);
+        //document.forms[0].elements.pos.value = jsonstr;
+TestShit();
+    }
+    
+    function TestShit()
+    {
+        //var mark = document.getElementById('setlocation').innerHTML + '*';
+        //document.getElementById('setlocation').innerHTML = mark
+
+        var lat = $('#lat').val(); //document.forms[0].elements.x_lat.value;
+        //alert(lat);
+        var lng = $('#lon').val();// document.forms[0].elements.x_lon.value;
+        var info = codeLatLng(lat, lng);
+        //document.forms[0].elements.lon.value = "clear the shit";
+        //alert('test shit ' + info); 
+    } 
+
+    function removeme__________MarkLocation()
+    {
+        //var mark = document.getElementById('add-event-butto').innerHTML + '3*';
+        //document.getElementById('add-event-butto').innerHTML = mark
+
+        var root = ".";
+        //var url = root + "/anytaxis33a";
+        var url = root + "/anytaxis33a/GM"; //GM";
+        var address = document.forms[0].elements.x_gisaddress.value
+        var from    = document.forms[0].elements.from.value
+        
+        //address = '"address:"' + address + '"';
+        //var oLoc  = JSON.parse(loc) || 'wtf';
+        var location =  '"loc" : ' +  '{"address" : "'+ address + '"}'; //loc;
+        //var json = '{"id":1, "subject":"Taxi"' + to + body + ', ' + location + '}';
+        var json = '{"id":1, "subject":"Taxi"' + address + '}';
+        var body = "I at  " + address;
+        body =  (body.length >0) ? ',"body" : ' + '"' + body + '"' : "";
+        var to = '9088580954@vtext.com';
+        to   =  ( to.length >0) ? ',"to"   : ' + '"' + to + '"'   : "";
+        from = (from.length >0) ? ',"from" : ' + '"' + from + '"' : "";
+   
+        var json = '{"id":1, "subject":"Taxi"' + to + from + body + ', ' + location + '}';
+        //return myanytaxis_Post(url, json);
+
+        alert('MarkLocation '+ address +'   '+json );
+    }
+    
+    
 // location stuff end
 </script>    
-
-<script type="text/javascript">   
-    var height = 0;
-    $('div p').each(function(i, value){
-        height += parseInt($(this).height());
-    });
-
-    height += '';
-    //alert(height);
-    $('dvTable').animate({scrollTop: height});
-</script>
 
   </head>
   <body>
@@ -127,38 +212,49 @@
     <!--the hidden shits begin -->
     <input id="lat" type="hidden" name="x_lat" value="" />
     <input id="lon" type="hidden" name="x_lon" value="" />
+    
+   <input type="hidden" id="Text1"   name= "x_gisaddress"   value="" />
     <!--the hidden shits end -->
 
-    <div class="wrapper" id="dvTable" >
+
+
+    <div class = "wrapper" id="dvTable" >
     <span id="messages"></span>
     </div>
-    <div>
-    <span> <%= myInitials %> chatting in room <%= myGroup %></span>
-    </div>
- 
-<form action="">
- <div class="form-group form-group-lg">
+        <span> <%= myInitials %> chatting in room <%= myGroup %></span>
+  
+    <script type="text/javascript">
+    
+    var height = 0;
+$('div p').each(function(i, value){
+    height += parseInt($(this).height());
+});
+
+height += '';
+//alert(height);
+$('dvTable').animate({scrollTop: height});
+
+</script>
+ <form action="">
+
+    
+    
+     <div class="form-group form-group-lg">
      <!--
     <label class="col-sm-2 control-label" for="formGroupInputLarge">chit chatty</label>
-     -->
-     <!--
+    -->
     <div class="col-sm-10">
       <input class="form-control" type="text" id="m" autocomplete="off" placeholder="say something">
     </div>
-  -->
-
-    <div class="form-group">
-      <input class="form-control" type="text" id="m" autocomplete="off" placeholder="say something">
-    </div>
-
- </div>
+  </div>
    <div class="form-group">
-    <button type="submit" class="btn btn-primary btn-lg btn-block">Send</button>
+<button type="submit" class="btn btn-primary btn-lg btn-block">Send</button>
+    <div class="input-group">
+    </div>
   </div>
 
     <!-- <input id="m" autocomplete="off" /><button>Send</button> -->
     </form>
-    
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     
@@ -170,7 +266,14 @@
     
     var initial = '<%= myInitials %>'; // || 'chat message';
     var room = '<%= myGroup %>';
-   	var socket = io.connect(); //('http://localhost:8080');
+    //initial = initial + ': ';
+    //textbox.val("");
+    //alert (textbox);
+    
+    //var ggg =  'chat message'; //'<%= myGroup %>' || 'chat message';
+    //alert(ggg);
+      //var socket = io();
+      	var socket = io.connect(); //('http://localhost:8080');
 
 	// on connection to server, ask for user's name with an anonymous callback
 	socket.on('connect', function(){
@@ -225,6 +328,8 @@ if (iWt > 1)
     mycmd.my_test();
     // get location
     getLocation();
+    //alert('wtf' + navigator);
+    
 }
 //
       
@@ -243,7 +348,7 @@ if (iWt > 1)
       
     </script>
     <script>
-    function sendMsg(data)
+    function sendShit(data)
     {
         socket.emit('sendchat', data);
     }

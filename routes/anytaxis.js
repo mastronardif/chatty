@@ -19,8 +19,9 @@ var domain = 'joeschedule.mailgun.org';
 // 'mastronardif@gmail.com';
 var Kris  = 'mastronardif@gmail.com';//"9084442745@vtext.com";
 var Frank = "9088580954@vtext.com"; //,mastronardif@gmail.com"; //,mastronardif@netcarrier.com";
-var gEveryone = "9088580954@vtext.com"; //,mastronardif@gmail.com"; //,mastronardif@netcarrier.com";
-var gWhoAteTheWings = "9088580954@vtext.com";
+var gEveryone = "9088580954@vtext.com";"; //,mastronardif@gmail.com"; //,mastronardif@netcarrier.com";
+var gCallHomeGroup = "9088580954@vtext.com,9084442745@vtext.com,9086443974@messaging.sprintpcs.com,mastronardif@gmail.com";
+var gWhoAteTheWings = "9088580954@vtext.com,mastronardif@gmail.com";
 var from_who = 'mastronardif@gmail.com';
 var       to = 'mastronardif@netcarrier.com';
 var sub = "you drank all my wine";
@@ -59,7 +60,8 @@ function mailgunSend(data)
 {
     //console.log(" \n ^^^^ mailgunSend " + " "  + JSON.stringify( data ) ); 
     //return;
-
+    var results = "wtf";
+    
      //We pass the api_key and domain to the wrapper, or it won't be able to identify + send emails
     var mailgun = new Mailgun({apiKey: api_key, domain: domain});            
     //Invokes the method to send emails given the above data with the helper library
@@ -78,6 +80,36 @@ function mailgunSend(data)
         }
     });    
 } 
+
+function tellEveryonePartyline(id)
+{
+        //We pass the api_key and domain to the wrapper, or it won't be able to identify + send emails
+    var mailgun = new Mailgun({apiKey: api_key, domain: domain});
+
+    var sub  = '<a href="tel:641-715-3580,812789#">call party line</a>"';
+    var body = 'Press link to auto dial <a href="tel:641-715-3580,812789#">call party line</a>';
+    var from = Frank;
+    var to   = gCallHomeGroup;
+    var results = "wtf2";
+        
+    var data = {
+    //Specify email data
+      from: from,
+    //The email to contact
+      to: to,
+    //Subject and text data  
+      subject: sub,
+      text: body
+      //html: 'Hello, This is not a plain-text email, I wanted to test some spicy Mailgun sauce in NodeJS! <a href="http://0.0.0.0:3030/validate?' + 
+      //'">Click here to add your email address to a mailing list</a>'
+    }
+
+     console.log("***************** data("+JSON.stringify(data) + ")");
+     results = mailgunSend(data);;
+     
+     return results;
+    
+}
 
 function tellEveryone22(obj)
 {
@@ -133,6 +165,9 @@ function tellEveryone22(obj)
 
 function tellEveryone(id)
 {
+    var idd   = id['id'];
+    if (133 == idd) { return tellEveryonePartyline(id); }
+    
     return tellEveryone22(id);
     
     if ('WhoAteTheWings' == id) { return tellEveryone22(id); }
